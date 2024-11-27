@@ -5,7 +5,6 @@ from django.db.models import Q
 from django.utils import timezone
 from django.views.generic import ListView
 from django.shortcuts import get_object_or_404
-from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 
@@ -24,9 +23,7 @@ class IndexView(ListView):
             & Q(category__is_published=True)
         ).order_by(
             "-pub_date"
-        ).annotate(
-           comment_count=Count("comment")
-        )
+        ).annotate(comment_count=Count("comment"))
         return page_obj
 
     def get_context_data(self, *args, **kwargs):
@@ -46,7 +43,9 @@ class CategoryListView(ListView):
         page_obj = Cat.post.filter(
             is_published=True,
             pub_date__lte=timezone.now()
-        )
+        ).order_by(
+            "-pub_date"
+        ).annotate(comment_count=Count("comment"))
         return page_obj
 
     def get_context_data(self, *args, **kwargs):
