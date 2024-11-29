@@ -66,6 +66,8 @@ class Post(AbstractFieldsModel):
         verbose_name='Заголовок'
     )
     image = models.ImageField(
+        upload_to="media/",
+        null=True,
         blank=True,
         verbose_name='Изображение'
     )
